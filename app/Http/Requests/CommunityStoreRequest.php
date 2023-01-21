@@ -13,7 +13,7 @@ class CommunityStoreRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,21 @@ class CommunityStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name' => ['required', 'unique:communities'],
+            'slug' => ['required', 'unique:communities'],
+            'description' => ['required', 'min:5']
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'name.required' => "Please enter a community name.",
+            'name.unique' => "Community name was already exist.",
+            'slug.required' => "Please enter a slug name for community.",
+            'slug.unique' => "Community slug name was already exist.",
+            'description.required' => "Please enter description of community.",
+            'description.min' => "Description of community must be greater than 5.",
         ];
     }
 }

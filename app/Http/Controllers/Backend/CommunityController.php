@@ -3,7 +3,12 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CommunityStoreRequest;
+use App\Models\Community;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+
+use function Termwind\render;
 
 class CommunityController extends Controller
 {
@@ -14,7 +19,8 @@ class CommunityController extends Controller
      */
     public function index()
     {
-        //
+        $communities = Community::all();
+        return Inertia::render('Communities/Index', compact('communities'));
     }
 
     /**
@@ -24,18 +30,23 @@ class CommunityController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Communities/Create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  CommunityStoreRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CommunityStoreRequest $request)
     {
-        //
+        $community = $request->validated();
+        $community['user_id'] = auth()->id();
+        Community::create($community);
+
+        return $this->index();
+        // return Inertia::render('Communities/Index');
     }
 
     /**
